@@ -152,7 +152,7 @@ export default {
 </script>
 
 // scoped 局部的
-<style scoped lang='scss'>
+<style   lang='scss'>
 // 背景画布样式
 #particle-canvas {
   width: 100%;
@@ -201,5 +201,13 @@ export default {
       }
     }
   }
+}
+
+// 修改label样式
+.el-form-item__label {
+  color: white;
+}
+.el-checkbox__label {
+  color: white;
 }
 </style>
