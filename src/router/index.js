@@ -5,10 +5,15 @@ Vue.use(VueRouter)
 
 //路由数组
 const routes = [
+  //首页
+  {
+    path:'/',
+    component:()=> import('@v/Index.vue')
+  },
 
   //登录页
   {
-    path:'/',
+    path:'/login',
     component: ()=> import('@v/Login.vue')
   },
   {

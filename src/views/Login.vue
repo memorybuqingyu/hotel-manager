@@ -114,14 +114,26 @@ export default {
       this.ruleForm.loginPwd = strToMd5(this.ruleForm.loginPwd);
 
       getLogin(this.ruleForm.loginId, this.ruleForm.loginPwd).then((res) => {
-        console.log(res.data);
+        console.log(res);
         //判断是否登录成功
         if (res.data.success) {
+          //跳转到后台管理
+          this.$router.push("/layout");
+
           //服务器会返回一个token（令牌）
           //所以，需要保存该token信息，通常会保存在浏览器的缓存空间中
           //浏览器的缓存空间，有两种：sessionStorage和localStorage
           //区别 localStorage中保存的数据会一直存在 sessionStorage里保存的数据会随着浏览器的关闭而清空
           sessionStorage.setItem("token", res.data.token);
+
+          // 在浏览器中保存登录名
+          localStorage.setItem("loginId", this.ruleForm.loginId);
+
+          // 判断是否需要记住密码
+          if (this.ruleForm.checkMe) {
+            // 保存密码
+            localStorage.setItem("loginPwd", this, this.ruleForm.loginPwd);
+          }
           //调用设置token到请求头中
           // setToken();
         }
@@ -131,12 +143,33 @@ export default {
     //表单的提交方法
     submitForm(formName) {
       //判断表单数据是否验证成功
-      this.$refs[formName].validate((valid) => {
+      this.$refs[formName].validate(async (valid) => {
         if (valid) {
           //实现登录
-          this.login();
-          //跳转到后台管理
-          this.$router.push("/layout");
+          // this.login();
+          this.ruleForm.loginPwd = strToMd5(this.ruleForm.loginPwd);
+          let { message, success } = await this.$get(
+            "/Admin/Login",
+            this.ruleForm
+          );
+
+          if (success) {
+            // 跳转
+            this.$router.push("/layout");
+            sessionStorage.setItem("token", success.token);
+            // 设置token到请求头
+            this.$setToken();
+          }
+
+          // 在浏览器中保存登录名
+          localStorage.setItem("loginId", this.ruleForm.loginId);
+
+          // 判断是否需要记住密码
+          if (this.ruleForm.checkMe) {
+            // 保存密码
+            localStorage.setItem("loginPwd", this.ruleForm.loginPwd);
+            console.log(this.ruleForm.loginPwd);
+          }
         } else {
           console.log("error submit!!");
           return false;

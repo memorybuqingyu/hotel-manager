@@ -5,10 +5,10 @@ import NProgress from 'nprogress'
 import 'nprogress'
 
 export function request(config) {
+
   //1.创建axios实例
   const instence = axios.create({
     baseURL: 'http://bingjs.com:83',
-    // baseURL:'http://152.136.185.210:7878/api/m5/',
     timeout: 30000
   })
 

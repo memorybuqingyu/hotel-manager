@@ -6,5 +6,5 @@ import 'element-ui/lib/theme-chalk/index.css';
 Vue.use(ElementUI);
 
 //注册MyPlugin插件
-// import MyPlugin from './MyPlugin'
-// Vue.use(MyPlugin)
+import myPlugin from './MyPlugin'
+Vue.use(myPlugin)

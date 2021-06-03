@@ -5,23 +5,29 @@ import axios from 'axios'
 import NProgress from 'nprogress'
 import 'nprogress'
 
+// 初始化一个axios对象
 var instance = axios.create({
   baseURL: 'http://bingjs.com:83',
   timeout: 30000,
 });
 
+
+
+
 //创建一个get请求
-let get = function (url, params) {
-  return instance.get(url, { params })
+let get = async function (url, params) {
+  let { data } = await instance.get(url, { params })
+  return data
 }
 
 //创建一个post请求
-let post = function (url, params) {
-  return instance.post(url, params)
+let post = async function (url, params) {
+  let { data } = await instance.post(url, params)
+  return data
 }
 
 //添加请求拦截器
-instence.interceptors.request.use(config => {
+instance.interceptors.request.use(config => {
   //开启进度条
   NProgress.start()
 
@@ -32,7 +38,7 @@ instence.interceptors.request.use(config => {
 
 })
 //添加响应拦截器
-instence.interceptors.response.use(res => {
+instance.interceptors.response.use(res => {
   NProgress.done();
 
   return res;
@@ -41,7 +47,12 @@ instence.interceptors.response.use(res => {
   NProgress.done();
 })
 
+// 将token信息保存到请求头的方法 
+let setToken = function () {
+  instance.defaults.headers.common['token'] = sessionStorage.getItem('token')
+}
+
 //导出get和post方法
 export {
-  get, post
+  get, post, setToken
 }
